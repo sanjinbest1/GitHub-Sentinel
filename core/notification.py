@@ -1,20 +1,18 @@
 import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from config.settings import NOTIFICATION_SETTINGS
 
-class NotificationSystem:
-    def send_email(self, to_email, subject, body):
-        msg = MIMEMultipart()
-        msg["From"] = "your_email@example.com"
-        msg["To"] = to_email
-        msg["Subject"] = subject
+class NotificationManager:
+    def __init__(self):
+        self.enabled = NOTIFICATION_SETTINGS['enabled']
+        self.email = NOTIFICATION_SETTINGS['email']
 
-        msg.attach(MIMEText(body, "plain"))
-        
-        with smtplib.SMTP("smtp.example.com") as server:
-            server.login("your_email@example.com", "password")
-            server.sendmail(msg["From"], msg["To"], msg.as_string())
-
-    def send_slack_notification(self, channel, message):
-        # Slack integration
-        pass
+    def send_notification(self, message):
+        """
+        Send a notification (for example, an email).
+        :param message: The message to be sent
+        """
+        if self.enabled:
+            # Here you can implement email or other types of notifications
+            print(f"Sending notification to {self.email}: {message}")
+        else:
+            print("Notifications are disabled.")

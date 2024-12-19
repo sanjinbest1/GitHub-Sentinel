@@ -1,27 +1,16 @@
-import schedule
+import threading
 import time
-from core.update_fetcher import UpdateFetcher
-from core.report_generator import ReportGenerator
-from core.notification import NotificationSystem
+from core.update_fetcher import fetch_and_generate_reports
 
-class Scheduler:
-    def __init__(self):
-        self.update_fetcher = UpdateFetcher()
-        self.report_generator = ReportGenerator()
-        self.notification_system = NotificationSystem()
+def scheduler_job():
+    """Background scheduler job to fetch updates."""
+    while True:
+        print("[Scheduler] Fetching updates...")
+        fetch_and_generate_reports()
+        print("[Scheduler] Sleeping for 24 hours...")
+        time.sleep(86400)  # Run daily
 
-    def schedule_daily_update(self):
-        schedule.every().day.at("09:00").do(self.run_task)
-
-    def schedule_weekly_update(self):
-        schedule.every().monday.at("09:00").do(self.run_task)
-
-    def run_task(self):
-        updates = self.update_fetcher.fetch_updates()
-        report = self.report_generator.generate_report(updates)
-        self.notification_system.send_email("user@example.com", "Daily GitHub Updates", report)
-        
-    def run(self):
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
+def start_scheduler():
+    """Start the scheduler in a separate thread."""
+    scheduler_thread = threading.Thread(target=scheduler_job, daemon=True)
+    scheduler_thread.start()

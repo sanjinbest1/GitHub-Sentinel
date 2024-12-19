@@ -1,17 +1,35 @@
 import requests
-from config import settings
+from config.settings import GITHUB_TOKEN, GITHUB_API_URL
 
-class GitHubAPI:
-    def __init__(self):
-        self.base_url = "https://api.github.com"
-        self.headers = {
-            "Authorization": f"token {settings.GITHUB_TOKEN}"
-        }
+# Set up headers with authorization
+headers = {
+    'Authorization': f'token {GITHUB_TOKEN}'
+}
 
-    def get_repo_updates(self, repo_owner, repo_name):
-        url = f"{self.base_url}/repos/{repo_owner}/{repo_name}/events"
-        response = requests.get(url, headers=self.headers)
-        if response.status_code == 200:
-            return response.json()  # Returns a list of events for the repo
-        else:
-            raise Exception(f"Error fetching updates: {response.status_code}")
+def fetch_latest_release(repo):
+    """
+    Fetch the latest release from the specified GitHub repository.
+    :param repo: GitHub repository name (e.g., 'owner/repo')
+    :return: JSON response with release data
+    """
+    url = f'{GITHUB_API_URL}/repos/{repo}/releases/latest'
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()  # Return the latest release data
+    else:
+        raise Exception(f"Error fetching data for {repo}: {response.status_code}")
+
+def fetch_repo_info(repo):
+    """
+    Fetch repository information from GitHub.
+    :param repo: GitHub repository name (e.g., 'owner/repo')
+    :return: JSON response with repository data
+    """
+    url = f'{GITHUB_API_URL}/repos/{repo}'
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()  # Return repository info
+    else:
+        raise Exception(f"Error fetching repo data for {repo}: {response.status_code}")

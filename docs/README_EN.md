@@ -2,6 +2,8 @@
 
 GitHub Sentinel is an open-source AI-powered tool designed for developers and project managers to automatically collect and summarize the latest updates from subscribed GitHub repositories on a regular basis (daily/weekly). The primary features of GitHub Sentinel include repository subscription management, update fetching, notification system, and report generation. By keeping track of the latest repository changes and pushing notifications to users, GitHub Sentinel significantly enhances team collaboration and project management, allowing users to efficiently monitor project progress, respond quickly to changes, and ensure that the project remains up to date.
 
+[中文版 README](docs/README_CN.md)
+
 ## Features
 
 - **Repository Subscription Management**: Subscribe to GitHub repositories to automatically track their updates.

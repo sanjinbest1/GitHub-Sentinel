@@ -1,13 +1,33 @@
-from core.github_api import GitHubAPI
-from core.subscription import SubscriptionManager
+
+from core.github_api import fetch_latest_release
+from core.report_generator import generate_report
+from core.subscription import load_subscriptions
 
 class UpdateFetcher:
-    def __init__(self):
-        self.github_api = GitHubAPI()
-        self.subscription_manager = SubscriptionManager()
+    def __init__(self, repo):
+        self.repo = repo
 
-    def fetch_updates(self):
-        updates = {}
-        for repo_owner, repo_name in self.subscription_manager.get_subscriptions():
-            updates[(repo_owner, repo_name)] = self.github_api.get_repo_updates(repo_owner, repo_name)
-        return updates
+    def get_latest_update(self):
+        """
+        Fetch the latest release of the repository.
+        :return: Latest release data
+        """
+        try:
+            return fetch_latest_release(self.repo)
+        except Exception as e:
+            print(f"Error fetching updates: {e}")
+            return None
+
+
+
+def fetch_and_generate_reports():
+    """Fetch and generate reports for all subscribed repositories."""
+    subscriptions = load_subscriptions()
+    for repo in subscriptions:
+        try:
+            print(f"Fetching latest release for {repo}...")
+            latest_release = fetch_latest_release(repo)
+            report_path = generate_report(latest_release, repo)
+            print(f"Report generated: {report_path}")
+        except Exception as e:
+            print(f"Failed to fetch updates for {repo}: {e}")

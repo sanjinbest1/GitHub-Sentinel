@@ -34,8 +34,14 @@ def remove_subscription(repo):
     return f"Repository {repo} is not in subscriptions."
 
 def list_subscriptions():
-    """List all subscribed repositories."""
-    subscriptions = load_subscriptions()
-    if subscriptions:
-        return "\n".join(subscriptions)
-    return "No subscriptions found."
+    """Load subscriptions from a JSON file."""
+    if os.path.exists(SUBSCRIPTIONS_FILE):
+        with open(SUBSCRIPTIONS_FILE, "r") as file:
+            subscriptions = json.load(file)
+            # 确保读取的内容是完整的仓库名称列表
+            if isinstance(subscriptions, list):
+                return subscriptions
+            else:
+                return []
+    return []
+

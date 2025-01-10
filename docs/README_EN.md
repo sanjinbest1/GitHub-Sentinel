@@ -11,6 +11,16 @@ GitHub Sentinel is an open-source AI-powered tool designed for developers and pr
 - **Notification System**: Receive notifications about the latest updates from repositories in your subscription list.
 - **Report Generation**: Generate detailed reports on the progress and updates of the repositories for team review.
 
+
+## Versions
+
+Below is a table of the available GitHub Sentinel versions, along with their release links:
+
+| Version Tag                                                                  | Release Date | Description                | 
+|------------------------------------------------------------------------------|--------------|----------------------------|
+| [v0.0.1](https://github.com/sanjinbest1/GitHub-Sentinel/releases/tag/v0.0.1) | 2024-12-12   | Initial release | 
+| [v0.1](https://github.com/sanjinbest1/GitHub-Sentinel/releases/tag/v0.1)    | 2024-12-19   | The interactive command-line interface allows users to dynamically execute operations (such as subscribe, unsubscribe, list repositories, fetch updates, and generate reports), with GitHub Release version information integrated. | 
+
 ## Getting Started
 
 ### Prerequisites

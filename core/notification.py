@@ -1,4 +1,4 @@
-import smtplib
+
 from config.settings import NOTIFICATION_SETTINGS
 
 class NotificationManager:

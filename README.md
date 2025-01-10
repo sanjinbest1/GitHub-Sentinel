@@ -11,6 +11,13 @@ GitHub Sentinel 是一款开源的 AI 工具，专为开发者和项目管理人
 - **通知系统**: 获取关于订阅仓库最新更新的通知。
 - **报告生成**: 生成详细的仓库进度和更新报告，供团队评审。
 
+Below is a table of the available GitHub Sentinel versions, along with their release links:
+
+| 版本                                                                           | 日期             | 描述                                                                      | 
+|------------------------------------------------------------------------------|----------------|-------------------------------------------------------------------------|
+| [v0.0.1](https://github.com/sanjinbest1/GitHub-Sentinel/releases/tag/v0.0.1) | 2024-12-12     | Initial release                                                         | 
+| [v0.1](https://github.com/sanjinbest1/GitHub-Sentinel/releases/tag/v0.1)     | 2024-12-19     | 通过交互式命令行界面，用户可以动态执行操作（如订阅、取消订阅、列出仓库、获取更新和生成报告），并集成 GitHub Release 版本信息。 | 
+
 ## 快速开始
 
 ### 前提条件
@@ -59,6 +66,9 @@ GitHub-Sentinel/
 ├── data/
 │   ├── __init__.py
 │   ├── data_store.py       # 存储和检索仓库数据
+├── llm/
+│   ├── __init__.py
+│   ├── openai.py       # 大模型对接
 ├── scheduler/
 │   ├── __init__.py
 │   ├── scheduler.py        # 定时任务调度（每日/每周更新）

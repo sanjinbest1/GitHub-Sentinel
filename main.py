@@ -1,112 +1,95 @@
-import argparse
+import os
+import cmd
+from datetime import datetime
+from core.github_api import GitHubClient
+from llm.openai_llm import LLMClient
+from core.report_generator import ReportGenerator
 from core.subscription import add_subscription, remove_subscription, list_subscriptions
-from core.update_fetcher import fetch_and_generate_reports
-from core.github_api import fetch_latest_release
-from core.report_generator import generate_report
-from scheduler.scheduler import start_scheduler
 
+# 配置设置
+OPENEAI_API_KEY = "sk-rwpBavDZX18kBqMCx5XeETDEGrqwQgaiFWgQIuA0IltTZ5dg"
+OPENAI_PROXY_URL = "https://api.feidaapi.com/v1"  # 中转服务的 URL
 
-def subscribe(repo):
-    print(add_subscription(repo))
+# 初始化客户端
+github_client = GitHubClient()
+llm_client = LLMClient(OPENEAI_API_KEY)  # 传递中转服务的 URL
+report_generator = ReportGenerator(llm_client)
 
+class GitHubSentinelCLI(cmd.Cmd):
+    intro = 'Welcome to GitHub Sentinel! Type help or ? to list commands.\n'
+    prompt = '(GitHub-Sentinel) '
 
-def unsubscribe(repo):
-    print(remove_subscription(repo))
+    def do_fetch(self, arg):
+        """Fetch issues, pull requests and generate reports for all subscribed repositories."""
+        today = datetime.today().strftime("%Y-%m-%d")
+        subscriptions = list_subscriptions()
 
+        if not subscriptions:
+            print("No repositories are currently subscribed to.")
+            return
 
-def list_repos():
-    print("Subscribed repositories:")
-    print(list_subscriptions())
+        # 获取并保存每日进展
+        for repo in subscriptions:
+            owner, repo_name = repo.split("/")
 
+            # 获取仓库的 issues 和 PRs 列表
+            issues, prs = github_client.get_issues_and_prs(owner, repo_name)
 
-def fetch_all():
-    print("Fetching updates for all subscriptions...")
-    fetch_and_generate_reports()
+            # 将数据保存为 Markdown 文件
+            github_client.save_to_markdown(repo_name, issues, prs)
+            print(f"Progress saved for {repo_name} - {today}")
 
+        # 为每个仓库生成每日报告
+        for repo in subscriptions:
+            owner, repo_name = repo.split("/")
+            report_filename = report_generator.generate_report(repo_name, today)
+            print(f"Report generated for {repo_name} - {today}: {report_filename}")
 
-def fetch_repo(repo):
-    try:
-        print(f"Fetching latest release for {repo}...")
-        release = fetch_latest_release(repo)
-        print(f"Latest release: {release.get('tag_name', 'N/A')} - {release.get('name', 'N/A')}")
-    except Exception as e:
-        print(f"Error fetching updates for {repo}: {e}")
+    def do_report(self, arg):
+        """Generate reports for all subscribed repositories."""
+        today = datetime.today().strftime("%Y-%m-%d")
+        subscriptions = list_subscriptions()
 
+        if not subscriptions:
+            print("No repositories are currently subscribed to.")
+            return
 
-def generate_repo_report(repo):
-    try:
-        print(f"Generating report for {repo}...")
-        release = fetch_latest_release(repo)
-        report_path = generate_report(release, repo)
-        print(f"Report generated: {report_path}")
-    except Exception as e:
-        print(f"Error generating report for {repo}: {e}")
+        for repo in subscriptions:
+            owner, repo_name = repo.split("/")
+            report_filename = report_generator.generate_report(repo_name, today)
+            print(f"Report generated for {repo_name} - {today}: {report_filename}")
 
-
-def print_help():
-    print("""
-GitHub Sentinel Interactive Tool (gs)
-Commands:
-  subscribe <repo>      Subscribe to a repository (e.g., owner/repo)
-  unsubscribe <repo>    Unsubscribe from a repository
-  list                  List all subscribed repositories
-  fetch [repo]          Fetch updates for all or a specific repository
-  report <repo>         Generate a report for a specific repository
-  exit                  Exit the tool
-""")
-
-
-def main():
-    # Start scheduler in the background
-    start_scheduler()
-    print("[Scheduler] Running in the background...\n")
-
-    print("Welcome to GitHub Sentinel Interactive Tool!")
-    print_help()
-
-    while True:
-        # Prompt user for input
-        user_input = input("\n> ").strip()
-        if not user_input:
-            continue
-
-        # Split input into command and arguments
-        parts = user_input.split()
-        command = parts[0]
-        args = parts[1:]
-
-        # Command handling
-        if command == "subscribe":
-            if len(args) != 1:
-                print("Usage: subscribe <repo>")
-            else:
-                subscribe(args[0])
-        elif command == "unsubscribe":
-            if len(args) != 1:
-                print("Usage: unsubscribe <repo>")
-            else:
-                unsubscribe(args[0])
-        elif command == "list":
-            list_repos()
-        elif command == "fetch":
-            if len(args) == 0:
-                fetch_all()
-            elif len(args) == 1:
-                fetch_repo(args[0])
-            else:
-                print("Usage: fetch [repo]")
-        elif command == "report":
-            if len(args) != 1:
-                print("Usage: report <repo>")
-            else:
-                generate_repo_report(args[0])
-        elif command in {"exit", "quit"}:
-            print("Exiting GitHub Sentinel. Goodbye!")
-            break
+    def do_subscribe(self, repo):
+        """Subscribe to a repository (format: owner/repo)."""
+        if repo:
+            result = add_subscription(repo)
+            print(result)
         else:
-            print(f"Unknown command: {command}")
-            print_help()
+            print("Please provide a repository to subscribe to.")
 
+    def do_unsubscribe(self, repo):
+        """Unsubscribe from a repository (format: owner/repo)."""
+        if repo:
+            result = remove_subscription(repo)
+            print(result)
+        else:
+            print("Please provide a repository to unsubscribe from.")
+
+    def do_list(self, arg):
+        """List all subscribed repositories."""
+        subscriptions = list_subscriptions()
+
+        if subscriptions:
+            print("Subscribed repositories:")
+            for repo in subscriptions:
+                print(f"- {repo}")
+        else:
+            print("No repositories found.")
+
+    def do_exit(self, arg):
+        """Exit the application."""
+        print("Goodbye!")
+        return True
 
 if __name__ == "__main__":
-    main()
+    GitHubSentinelCLI().cmdloop()

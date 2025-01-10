@@ -1,0 +1,65 @@
+# langchain - 2025-01-10
+
+## Issues
+- docs[patch]: update docs for langchain-openai==0.3: https://github.com/langchain-ai/langchain/pull/29119
+- Additional kwargs key prompt_tokens already exists in left dict and value has unsupported type <class 'int'> in langchain-core/utils/_merge.py merge_dict() function when running with anthropic.claude-3-sonnet: https://github.com/langchain-ai/langchain/issues/29116
+- Pipeshift - Langchain integration of pipeshift: https://github.com/langchain-ai/langchain/pull/29114
+- docs[patch]: fix links in partner package table: https://github.com/langchain-ai/langchain/pull/29112
+- SurrealDBStore returns error `ImportError: cannot import name 'Surreal' from 'surrealdb'`: https://github.com/langchain-ai/langchain/issues/29111
+- Langchain_community: Fix issue with missing backticks in arango client: https://github.com/langchain-ai/langchain/pull/29110
+- Update word in databricks_vector_search.ipynb from "cna" to "can": https://github.com/langchain-ai/langchain/pull/29109
+-  UnstructuredMarkdownLoader#zipfile.BadZipFile: File is not a zip file: https://github.com/langchain-ai/langchain/issues/29108
+- [Community]: Small Fix in google_firestore memory notebook: https://github.com/langchain-ai/langchain/pull/29107
+- langchain-cli for MacOS unable to load required files: https://github.com/langchain-ai/langchain/issues/29106
+- poetry 2 see how much breaks: https://github.com/langchain-ai/langchain/pull/29105
+- docs: add Docling loader docs: https://github.com/langchain-ai/langchain/pull/29104
+- langchain: allow runnables as prompt: https://github.com/langchain-ai/langchain/pull/29103
+- community: add init for unstructured epub/image/markdown/pdf/ppt/word: https://github.com/langchain-ai/langchain/pull/29101
+- openai[minor]: release 0.3: https://github.com/langchain-ai/langchain/pull/29100
+- docs: Add upstage document parse loader to pdf loaders: https://github.com/langchain-ai/langchain/pull/29099
+- docs: Adding voyage-3-large to the .ipynb file: https://github.com/langchain-ai/langchain/pull/29098
+- openai[patch]: remove optional defaults: https://github.com/langchain-ai/langchain/pull/29097
+- docs: Remove additional ` in heading: https://github.com/langchain-ai/langchain/pull/29096
+- DOC: <Issue related to  --upgrade  flag in the lang chain documentation / >: https://github.com/langchain-ai/langchain/issues/29095
+- DOC: <Issue related to /v0.2/docs/tutorials/rag/>: https://github.com/langchain-ai/langchain/issues/29094
+- partner: Update Upstage Model Names and Remove Deprecated Model: https://github.com/langchain-ai/langchain/pull/29093
+- community: add init for `UnstructuredHTMLLoader` to solve pathlib paths: https://github.com/langchain-ai/langchain/pull/29091
+- UnstructuredHTMLLoader fail when given `Path` type document: https://github.com/langchain-ai/langchain/issues/29090
+- community: fix "confluence-loader" enable include_labels for documents loaded via CQL: https://github.com/langchain-ai/langchain/pull/29089
+- Labels are not included when include_labels=True is set in ConfluenceLoader: https://github.com/langchain-ai/langchain/issues/29088
+- DOC: Missing Information About the model Field in HuggingFaceEndpoint: https://github.com/langchain-ai/langchain/issues/29087
+- An error occurred while attempting to delete the message .: https://github.com/langchain-ai/langchain/issues/29086
+- Integration: Add Alibaba-Cloud's Lindorm as a integration: https://github.com/langchain-ai/langchain/pull/29085
+- TypeError: Object of type NAType is not serializable during state serialization in LangChain: https://github.com/langchain-ai/langchain/issues/29082
+
+## Pull Requests
+- docs[patch]: update docs for langchain-openai==0.3: https://github.com/langchain-ai/langchain/pull/29119
+- Pipeshift - Langchain integration of pipeshift: https://github.com/langchain-ai/langchain/pull/29114
+- poetry 2 see how much breaks: https://github.com/langchain-ai/langchain/pull/29105
+- langchain: allow runnables as prompt: https://github.com/langchain-ai/langchain/pull/29103
+- community: add init for unstructured epub/image/markdown/pdf/ppt/word: https://github.com/langchain-ai/langchain/pull/29101
+- openai[minor]: release 0.3: https://github.com/langchain-ai/langchain/pull/29100
+- Integration: Add Alibaba-Cloud's Lindorm as a integration: https://github.com/langchain-ai/langchain/pull/29085
+- rfc core: basemessage.text: https://github.com/langchain-ai/langchain/pull/29078
+- openai[patch]: support optional fields in dict structured output with method="json_schema": https://github.com/langchain-ai/langchain/pull/29075
+- core: Handle unterminated escape character when parsing partial JSON: https://github.com/langchain-ai/langchain/pull/29065
+- Refactoring PDF loaders: 02 PyMuPDF: https://github.com/langchain-ai/langchain/pull/29063
+- rfc: bind_tools(response_format): https://github.com/langchain-ai/langchain/pull/29051
+- rfc: AIMessage.parsed: https://github.com/langchain-ai/langchain/pull/29050
+- rfc: used AIMessage.parsed: https://github.com/langchain-ai/langchain/pull/29049
+- core: Use Blockbuster to detect blocking calls in asyncio during tests: https://github.com/langchain-ai/langchain/pull/29043
+- community: Add "headers" parameter support to OpenAPI tools: https://github.com/langchain-ai/langchain/pull/29007
+- Support for Gemini Tool Calling and Correct usage metadata in ChatOpenAI: https://github.com/langchain-ai/langchain/pull/29002
+- text-splitters: Add JSFrameworkTextSplitter for Handling JavaScript Framework Code: https://github.com/langchain-ai/langchain/pull/28972
+- Refactoring PDF loaders: all: https://github.com/langchain-ai/langchain/pull/28970
+- partner: Update aiohttp in langchain pinecone.: https://github.com/langchain-ai/langchain/pull/28863
+- core: improved method tools: https://github.com/langchain-ai/langchain/pull/28695
+- partners: Add the additonnal kward 'context' for openai: https://github.com/langchain-ai/langchain/pull/28472
+- core[patch]: dont deep copy merge_message_runs: https://github.com/langchain-ai/langchain/pull/28454
+- core:  Fixed inspecting schema issue when working with InjectedToolArg annotations: https://github.com/langchain-ai/langchain/pull/28435
+- core: fix issue with runnable parallel schema being empty when children runnable input schemas use TypedDict's: https://github.com/langchain-ai/langchain/pull/28196
+- core: Allow nested prompt templates: https://github.com/langchain-ai/langchain/pull/28024
+- Core: Handle Failed Cache Reads For Non-Serializable Objects: https://github.com/langchain-ai/langchain/pull/27989
+- community: use api token from Replicate constructor for service access: https://github.com/langchain-ai/langchain/pull/27859
+- core[patch]: make Tool.description optional: https://github.com/langchain-ai/langchain/pull/27759
+- rfc: add input coercion flag to chat models: https://github.com/langchain-ai/langchain/pull/27692

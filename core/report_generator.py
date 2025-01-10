@@ -1,36 +1,38 @@
 import os
 
-def generate_report(latest_release, repo):
-    """
-    Generate a report based on the latest release data.
-    :param latest_release: JSON response of the latest release
-    :param repo: Repository name
-    :return: Path to the generated report
-    """
-    tag_name = latest_release.get("tag_name", "N/A")
-    release_name = latest_release.get("name", "N/A")
-    published_at = latest_release.get("published_at", "N/A")
-    body = latest_release.get("body", "N/A")
-    author = latest_release.get("author", {}).get("login", "N/A")
+class ReportGenerator:
+    def __init__(self, llm_client):
+        self.llm_client = llm_client
 
-    report_content = f"""
-    GitHub Repository: {repo}
-    ============================================
-    Latest Release: {tag_name}
-    Release Name: {release_name}
-    Published At: {published_at}
-    Author: {author}
+    def generate_report(self, repo_name, date):
+        """
+        生成项目的每日报告，基于进展文件和 GPT-4 总结。
+        """
+        # 读取进展文件
+        filename = f"data/progress/{repo_name}_{date}.md"
+        if not os.path.exists(filename):
+            return f"No progress file found for {repo_name} on {date}"
 
-    Release Notes:
-    --------------------------------------------
-    {body}
-    """
+        with open(filename, "r") as f:
+            content = f.read()
 
-    # Save the report to a file
-    report_dir = "reports"
-    os.makedirs(report_dir, exist_ok=True)
-    report_path = os.path.join(report_dir, f"{repo.replace('/', '_')}_release_report.txt")
-    with open(report_path, "w", encoding="utf-8") as report_file:
-        report_file.write(report_content.strip())
+        # 提取 Issues 和 PRs 部分
+        issues_start = content.find("## Issues") + len("## Issues\n")
+        prs_start = content.find("## Pull Requests") + len("## Pull Requests\n")
+        issues = content[issues_start:prs_start].strip()
+        prs = content[prs_start:].strip()
 
-    return report_path
+        # 调用 GPT-4 API 生成报告
+        report = self.llm_client.summarize(issues, prs)
+
+        # 保存生成的报告
+        report_dir = "data/reports"
+        if not os.path.exists(report_dir):
+            os.makedirs(report_dir)
+
+        report_filename = f"data/reports/{repo_name}_{date}_report.md"
+        with open(report_filename, "w") as f:
+            f.write(f"# {repo_name} Daily Report - {date}\n\n")
+            f.write(report)
+
+        return f"Report generated: {report_filename}"

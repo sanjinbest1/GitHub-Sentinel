@@ -1,7 +1,7 @@
 import os
 import json
 
-SUBSCRIPTIONS_FILE = "data/subscriptions.json"
+SUBSCRIPTIONS_FILE = "config/subscriptions.json"
 
 def load_subscriptions():
     """Load subscriptions from a JSON file."""

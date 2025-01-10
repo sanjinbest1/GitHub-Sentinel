@@ -16,20 +16,19 @@ class ReportGenerator:
         with open(filename, "r") as f:
             content = f.read()
 
-        # 提取 Issues 和 PRs 部分
+        # 提取 Issues、PRs 和 Commits 部分
         issues_start = content.find("## Issues") + len("## Issues\n")
         prs_start = content.find("## Pull Requests") + len("## Pull Requests\n")
+        commits_start = content.find("## Commits") + len("## Commits\n")
+
         issues = content[issues_start:prs_start].strip()
-        prs = content[prs_start:].strip()
+        prs = content[prs_start:commits_start].strip()
+        commits = content[commits_start:].strip()
 
         # 调用 GPT-4 API 生成报告
-        report = self.llm_client.summarize(issues, prs)
+        report = self.llm_client.summarize(issues, prs, commits)
 
         # 保存生成的报告
-        report_dir = "data/reports"
-        if not os.path.exists(report_dir):
-            os.makedirs(report_dir)
-
         report_filename = f"data/reports/{repo_name}_{date}_report.md"
         with open(report_filename, "w") as f:
             f.write(f"# {repo_name} Daily Report - {date}\n\n")

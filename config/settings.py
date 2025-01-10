@@ -15,3 +15,12 @@ NOTIFICATION_SETTINGS = {
     'enabled': True,
     'email': 'sanjinbest1@gmail.com',  # Email for notifications (example)
 }
+
+
+
+
+# OpenAI key
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# OpenAI proxy URL
+OPENAI_PROXY_URL = os.getenv('OPENAI_PROXY_URL')
